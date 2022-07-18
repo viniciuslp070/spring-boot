@@ -4,15 +4,11 @@ import io.github.viniciuslp070.vendas.domain.entity.Customer;
 import io.github.viniciuslp070.vendas.domain.repository.CustomerRepository;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
 import java.util.List;
-import java.util.Optional;
+
 
 @RestController
 @RequestMapping(value = "/api/customers")
@@ -35,11 +31,9 @@ public class CustomerController {
 
     @PostMapping("/save")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity save(@RequestBody Customer customer) {
-        Customer customerSaved = customerRepository.save(customer);
-        return ResponseEntity.ok(customerSaved);
+    public Customer save(@RequestBody Customer customer) {
+        return customerRepository.save(customer);
     }
-
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -51,8 +45,7 @@ public class CustomerController {
                 }).orElseThrow(
                         () -> new ResponseStatusException(
                                 HttpStatus.NOT_FOUND,
-                                "Customer not found."
-                        )
+                                "Customer not found.")
                 );
     }
 
@@ -66,7 +59,7 @@ public class CustomerController {
                     return existingCustomer;
                 }).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "Customer not found,")
+                        "Customer not found.")
         );
     }
 
