@@ -1,5 +1,6 @@
 package io.github.viniciuslp070.vendas.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.aspectj.weaver.ast.Or;
 
 import javax.persistence.*;
@@ -16,6 +17,9 @@ public class Customer {
 
     @Column(name = "name", length = 100)
     private String name;
+
+    @Column(name = "cpf", length = 11)
+    private String cpf;
 
     @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
     private Set<Order> orders;
@@ -55,6 +59,10 @@ public class Customer {
     public void setNome(String nome) {
         this.name = nome;
     }
+
+    public String getCpf() { return cpf; }
+
+    public void setCpf(String cpf) { this.cpf = cpf;}
 
     @Override
     public String toString() {
