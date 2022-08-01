@@ -4,10 +4,12 @@ import io.github.viniciuslp070.vendas.domain.entity.Customer;
 import io.github.viniciuslp070.vendas.domain.entity.Order;
 import io.github.viniciuslp070.vendas.domain.entity.OrderProduct;
 import io.github.viniciuslp070.vendas.domain.entity.Product;
+import io.github.viniciuslp070.vendas.domain.enums.OrderStatus;
 import io.github.viniciuslp070.vendas.domain.repository.CustomerRepository;
 import io.github.viniciuslp070.vendas.domain.repository.OrderProductRepository;
 import io.github.viniciuslp070.vendas.domain.repository.OrderRepository;
 import io.github.viniciuslp070.vendas.domain.repository.ProductRepository;
+import io.github.viniciuslp070.vendas.exception.OrderNotFoundException;
 import io.github.viniciuslp070.vendas.rest.dto.OrderDTO;
 import io.github.viniciuslp070.vendas.rest.dto.OrderProductDTO;
 import io.github.viniciuslp070.vendas.exception.BusinessRuleException;
@@ -41,6 +43,7 @@ public class OrderServiceImp implements OrderService {
         order.setTotal(orderDTO.getTotal());
         order.setOrderDate(LocalDate.now());
         order.setCustomer(customer);
+        order.setStatus(OrderStatus.ORDERED);
 
         List<OrderProduct> orderProducts = convertItems(order, orderDTO.getItems());
         orderRepository.save(order);
@@ -54,6 +57,15 @@ public class OrderServiceImp implements OrderService {
     public Optional<Order> getFullOrder(Integer id) {
 
         return orderRepository.findByIdFetchOrderProducts(id);
+    }
+
+    @Override
+    @Transactional
+    public void updateStatus(Integer id, OrderStatus orderStatus){
+        orderRepository.findById(id).map(order -> {
+            order.setStatus(orderStatus);
+            return orderRepository.save(order);
+        }).orElseThrow(() -> new OrderNotFoundException());
     }
 
     private List<OrderProduct> convertItems(Order order, List<OrderProductDTO> items) {

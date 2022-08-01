@@ -2,9 +2,11 @@ package io.github.viniciuslp070.vendas.rest.controller;
 
 import io.github.viniciuslp070.vendas.domain.entity.Order;
 import io.github.viniciuslp070.vendas.domain.entity.OrderProduct;
+import io.github.viniciuslp070.vendas.domain.enums.OrderStatus;
 import io.github.viniciuslp070.vendas.rest.dto.OrderDTO;
 import io.github.viniciuslp070.vendas.rest.dto.OrderInfoDTO;
 import io.github.viniciuslp070.vendas.rest.dto.OrderProductInfoDTO;
+import io.github.viniciuslp070.vendas.rest.dto.UpdateOrderStatusDTO;
 import io.github.viniciuslp070.vendas.service.OrderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.CollectionUtils;
@@ -48,9 +50,21 @@ public class OrderController {
                 .cpf(order.getCustomer().getCpf())
                 .name(order.getCustomer().getName())
                 .total(order.getTotal())
+                .status(order.getStatus().name())
                 .items(convert(order.getOrderProducts()))
                 .build();
     }
+
+    @PatchMapping("/status/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateStatus(@PathVariable Integer id,
+                             @RequestBody UpdateOrderStatusDTO statusDTO) {
+        String newStatus = statusDTO.getNewStatus();
+        orderService.updateStatus(id, OrderStatus.valueOf(newStatus));
+    }
+
+
+
 
     private List<OrderProductInfoDTO> convert(List<OrderProduct> items) {
         if(CollectionUtils.isEmpty(items)) {

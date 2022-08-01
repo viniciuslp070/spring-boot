@@ -1,6 +1,7 @@
 create table customers (
     id int primary key auto_increment,
-    name varchar(100)
+    name varchar(100),
+    cpf varchar(11)
 );
 
 create table products (
@@ -13,6 +14,7 @@ create table orders (
     id int primary key auto_increment,
     customer_id int references customers(id),
     order_date timestamp,
+    status varchar(20)
     total numeric(20,2)
 );
 

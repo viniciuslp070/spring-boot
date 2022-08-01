@@ -1,5 +1,6 @@
 package io.github.viniciuslp070.vendas.domain.entity;
 
+import io.github.viniciuslp070.vendas.domain.enums.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,6 +30,7 @@ public class Order {
     @Column(name = "total", scale = 2,  precision = 20)
     private BigDecimal total;
 
+    @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
     @OneToMany(mappedBy = "order")
