@@ -7,19 +7,18 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
+import javax.validation.Valid;
 import java.util.List;
 
 
 @RestController
 @RequestMapping(value = "/api/customers")
 public class CustomerController {
-
     private CustomerRepository customerRepository;
-
     public CustomerController(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
     }
-
     @GetMapping("/{id}")
     public Customer findCustomerById(@PathVariable("id") Integer id) {
         return customerRepository.findById(id).orElseThrow(
@@ -31,7 +30,7 @@ public class CustomerController {
 
     @PostMapping("/save")
     @ResponseStatus(HttpStatus.CREATED)
-    public Customer save(@RequestBody Customer customer) {
+    public Customer save(@RequestBody @Valid Customer customer) {
         return customerRepository.save(customer);
     }
 
@@ -51,7 +50,7 @@ public class CustomerController {
 
     @PutMapping("/{id}")
     public void update(@PathVariable("id") Integer id,
-                       @RequestBody Customer customer) {
+                       @RequestBody @Valid Customer customer) {
         customerRepository.findById(id).map(
                 existingCustomer -> {
                     customer.setId(existingCustomer.getId());

@@ -7,7 +7,7 @@ create table customers (
 create table products (
     id int primary key auto_increment,
     description varchar(255),
-    unity_value numeric(20,2)
+    cost numeric(20,2)
 );
 
 create table orders (

@@ -13,6 +13,6 @@ import java.math.BigDecimal;
 public class OrderProductInfoDTO {
 
     private String description;
-    private BigDecimal unityValue;
+    private BigDecimal cost;
     private Integer quantity;
 }

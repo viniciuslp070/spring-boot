@@ -13,6 +13,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.Valid;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.Collections;
@@ -31,7 +32,7 @@ public class OrderController {
 
     @PostMapping("/save")
     @ResponseStatus(HttpStatus.CREATED)
-    public Integer save(@RequestBody OrderDTO orderDTO) {
+    public Integer save(@RequestBody @Valid OrderDTO orderDTO) {
         Order order = orderService.saveOrder(orderDTO);
         return order.getId();
     }
@@ -63,18 +64,14 @@ public class OrderController {
         orderService.updateStatus(id, OrderStatus.valueOf(newStatus));
     }
 
-
-
-
     private List<OrderProductInfoDTO> convert(List<OrderProduct> items) {
         if(CollectionUtils.isEmpty(items)) {
             return Collections.emptyList();
         }
-
         return items.stream().map(
                 item -> OrderProductInfoDTO
                         .builder().description(item.getProduct().getDescription())
-                        .unityValue(item.getProduct().getUnityValue())
+                        .cost(item.getProduct().getCost())
                         .quantity(item.getQuantity())
                         .build()
         ).collect(Collectors.toList());
